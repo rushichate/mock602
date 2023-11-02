@@ -44,7 +44,7 @@
             catagory : document.getElementById("catagory").value,
             date : document.getElementById("date").value
         }
-        fetch("https://vast-blue-salamander-wear.cyclic.app/blogs/blog",{
+        fetch("http://localhost:8000/blogs/blog",{
             method:"POST",
         headers :{
             "Content-type":"application/json",
@@ -63,7 +63,7 @@
 
    const container = document.getElementById("container")
   
-    fetch("https://vast-blue-salamander-wear.cyclic.app/blogs",{
+    fetch("http://localhost:8000/blogs",{
         method:"GET",
         headers :{
             "Content-type":"application/json",
@@ -112,7 +112,7 @@
 
     function deleteBlog(id){
         console.log(id)
-        fetch(`https://vast-blue-salamander-wear.cyclic.app/blogs/blog/${id}`,{
+        fetch(`http://localhost:8000/blogs/blog/${id}`,{
             method:"DELETE",
             headers :{
             "Content-type":"application/json",
