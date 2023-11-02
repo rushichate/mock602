@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blogs</title>
+</head>
+<body>
+    <div style="margin-left: 30px;">
+    <h1>Create a Blog</h1>
+    <label  for="tital">Title</label>
+    <input style="display: block;" type="text" id="title" placeholder="Title">
+    <label for="content">Write your content here</label>
+    <input style="display: block;" type="text"  id="content" placeholder="Blog Content">
+    <label for="catagory">Select Blog Catagory</label>
+    <select style="display: block;" name="" id="catagory">
+        <option value="Business">Business</option>
+        <option value="Tech">Tech</option>
+        <option value="Lifestyle">Lifestyle</option>
+        <option value="Entertainment">Entertainment</option>
+    </select>
+    <label for="date">Date</label>
+    <input style="display: block;" type="date"  id="date">
+    <button onclick="create()">Creat Blog</button>
+
+    </div>
+
+    <h1>Our Blogs</h1>
+    
+    <main id="container" style="display: grid; grid-template-columns: repeat(3,1fr);">
+
+    </main>
+
+    
+</body>
+<script>
+     const token = JSON.parse(localStorage.getItem("token"))
+
+    function create(){
+
+        const payload = {
+            title : document.getElementById("title").value,
+            content : document.getElementById("content").value,
+            catagory : document.getElementById("catagory").value,
+            date : document.getElementById("date").value
+        }
+        fetch("http://localhost:8000/blogs/blog",{
+            method:"POST",
+        headers :{
+            "Content-type":"application/json",
+            'Authorization': `${token}`
+        },
+        body:JSON.stringify(payload)
+        }).then(res=>res.json())
+        .then(res=>{
+            alert(res.msg)
+            location.reload();
+        })
+        .catch(error=>{
+            console.log(error)
+        })
+    }
+
+   const container = document.getElementById("container")
+  
+    fetch("http://localhost:8000/blogs",{
+        method:"GET",
+        headers :{
+            "Content-type":"application/json",
+            'Authorization': `${token}`
+        }
+    })
+    .then(res=>res.json())
+    .then((res)=>{
+        console.log(res)
+    const blogs = res.blogs
+    blogs.forEach(blog=>{
+        createBlogElement(blog)
+    })
+    })
+    .catch(err=>{
+        console.log(err)
+    })
+
+    function createBlogElement(blog){
+        const div = document.createElement("div")
+        const editButton = document.createElement("button")
+        editButton.innerText = "Edit"
+        editButton.addEventListener("click",()=> editBlog(blog._id))
+        div.appendChild(editButton)
+        const deleteButton = document.createElement("button")
+        deleteButton.innerText = "Delete"
+        deleteButton.addEventListener("click",()=> deleteBlog(blog._id))
+        div.appendChild(deleteButton)
+        const h2 = document.createElement("h2")
+        h2.innerText = blog.title
+        div.appendChild(h2)
+        const p2 = document.createElement("p")
+        p2.innerText = blog.catagory
+        div.appendChild(p2)
+        const h3 = document.createElement("h3")
+        h3.innerText = `Writer:- ${blog.username}`
+        div.appendChild(h3)
+        const p = document.createElement("p")
+        p.innerText = blog.content
+        div.appendChild(p)
+        const p1 = document.createElement("p")
+        p1.innerText = blog.likes
+        div.appendChild(p1)
+        container.appendChild(div)
+    }
+
+    function deleteBlog(id){
+        console.log(id)
+        fetch(`http://localhost:8000/blogs/blog/${id}`,{
+            method:"DELETE",
+            headers :{
+            "Content-type":"application/json",
+            'Authorization': `${token}`
+        }
+        }).then(res=>res.json())
+        .then(res=>{
+            alert(res.msg)
+            location.reload();
+        })
+        .catch(error=>{
+            console.log(error)
+        })
+
+    }
+
+    function editBlog(id){
+
+    }
+
+</script>
+</html>
